@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum ProductCategory {
+  PREMADE_POSTER
+  CUSTOM_PHOTO
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+}
+
+enum PromptCategory {
+  IMAGE
+  VIDEO
+  TEXT
+  PHOTO_EDIT
+}
+
+enum RedirectTarget {
+  GEMINI
+  CHATGPT
+  PERPLEXITY
+}
+
+// ─── Embedded Types ──────────────────────────────────────
+
+type OrderItem {
+  productId String
+  name      String
+  quantity  Int
+  packType  String   // "single" | "4pack" | "7pack"
+  unitPrice Int
+  uploadedImageUrls String[]
+}
+
+type ShippingDetails {
+  firstName       String
+  lastName        String
+  pinCode         String
+  addressLine1    String
+  addressLine2    String?
+  city            String
+  state           String
+  country         String  @default("India")
+  email           String?
+  phone           String
+  whatsappUpdates Boolean @default(true)
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model Product {
+  id           String          @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  slug         String          @unique
+  description  String?
+  category     ProductCategory
+  images       String[]        // Cloudinary URLs
+  pricePerUnit Int             // paise-friendly: store in rupees for now
+  packSize     Int?            // e.g. 7 for a 7-pack
+  packPrice    Int?            // price when bought as pack
+  isActive     Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+
+  @@map("products")
+}
+
+model Order {
+  id                  String          @id @default(auto()) @map("_id") @db.ObjectId
+  uniqueOrderNumber   String          @unique // L3DP-YYYYMMDD-XXXX
+  status              OrderStatus     @default(PENDING)
+  items               OrderItem[]
+  subtotal            Int
+  total               Int
+  shippingDetails     ShippingDetails
+  razorpayPaymentId   String?
+  razorpayOrderId     String?
+  delhiveryTrackingId String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  @@map("orders")
+}
+
+model PromptLog {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  promptText   String
+  category     PromptCategory
+  redirectedTo RedirectTarget?
+  createdAt    DateTime       @default(now())
+
+  @@map("prompt_logs")
+}
+
+// ─── Curious AI Posts ───────────────────────────────────
+
+enum PostType {
+  PHOTO_PROMPT
+  VIDEO_PROMPT
+  TEXT_PROMPT
+  ANIMATION_PROMPT
+}
+
+model CuriousPost {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  authorName    String      @default("Lucky 3DP")
+  authorAvatar  String?     // Cloudinary URL
+  postType      PostType
+  promptText    String
+  description   String?
+  beforeImage   String?     // Cloudinary URL
+  afterImage    String?     // Cloudinary URL
+  mediaUrls     String[]    // additional images/videos
+  likes         Int         @default(0)
+  likedBy       String[]    // session IDs to prevent double-like
+  shares        Int         @default(0)
+  copyCount     Int         @default(0)
+  isPublished   Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("curious_posts")
+}

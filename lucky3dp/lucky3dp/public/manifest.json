@@ -1,0 +1,22 @@
+{
+  "name": "LUCKY 3DP — Posters & Curious AI",
+  "short_name": "Lucky 3DP",
+  "description": "Premium A4 color printed posters & AI prompt tools",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D1117",
+  "theme_color": "#0D1117",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "entertainment", "utilities"],
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/images/Gemini_Generated_Image_mhpanwmhpanwmhpa.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
