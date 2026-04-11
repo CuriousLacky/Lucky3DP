@@ -1,7 +1,6 @@
 [build]
-  base = "lucky3dp"
   command = "npx prisma generate && npm run build"
-  publish = "lucky3dp/.next"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
