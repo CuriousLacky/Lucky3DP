@@ -39,8 +39,21 @@ export function getEnv(): Env {
       throw new Error("Missing required environment variables. Check Netlify env settings.");
     }
 
-    // Return partial for dev/build
-    return parsed.data as Env;
+    // Return safe defaults for dev/build when validation fails
+    return {
+      MONGODB_URI: process.env.MONGODB_URI || "",
+      RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID || "",
+      RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET || "",
+      CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || "",
+      CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || "",
+      CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || "",
+      DELHIVERY_API_TOKEN: process.env.DELHIVERY_API_TOKEN || "",
+      DELHIVERY_BASE_URL: process.env.DELHIVERY_BASE_URL || "https://track.delhivery.com/api",
+      NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+919584604150",
+      NEXT_PUBLIC_ADSTERRA_SCRIPT_URL: process.env.NEXT_PUBLIC_ADSTERRA_SCRIPT_URL || "",
+      NEXT_PUBLIC_RAZORPAY_KEY_ID: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || "dev-secret-change-in-production",
+    };
   }
 
   _env = parsed.data;
