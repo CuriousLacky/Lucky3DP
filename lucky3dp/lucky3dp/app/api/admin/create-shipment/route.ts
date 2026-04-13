@@ -1,6 +1,7 @@
 export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+export const runtime = 'nodejs';
+import prisma from '@/lib/prisma';
 
 /**
  * GET  — List all PAID orders that don't have a shipment yet
