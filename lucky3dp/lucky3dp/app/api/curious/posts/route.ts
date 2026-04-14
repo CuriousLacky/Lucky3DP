@@ -71,3 +71,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
   }
 }
+// Simple rate limit by IP
+const ip = req.headers.get("x-forwarded-for") || "unknown";
+const key = `ratelimit:${ip}`;
+// Check against a store, return 429 if exceeded
