@@ -7,6 +7,10 @@ import prisma from '@/lib/prisma';
  * POST — Create shipment for a specific order (proxies to /api/shipping/create-shipment)
  */
 
+const adminKey = req.headers.get("x-admin-key");
+if (adminKey !== process.env.ADMIN_API_KEY) {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
 export async function GET() {
   try {
     const orders = await prisma.order.findMany({
@@ -43,6 +47,10 @@ export async function GET() {
   }
 }
 
+const adminKey = req.headers.get("x-admin-key");
+if (adminKey !== process.env.ADMIN_API_KEY) {
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
 export async function POST(req: NextRequest) {
   try {
     const { orderId } = await req.json();
